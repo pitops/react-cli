@@ -1,0 +1,45 @@
+{
+  "name": "react-cli",
+  "description": "An advanced CLI for scaffolding react applications with a beginner-friendly attitude",
+  "version": "0.0.0",
+  "author": "Petros Kyriakou @pitops",
+  "bin": {
+    "rcli": "./bin/run"
+  },
+  "bugs": "https://github.com/pitops/react-cli/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.3",
+    "tslib": "^1.10.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "@types/node": "^13.7.0",
+    "eslint": "^6.8.0",
+    "eslint-config-oclif": "^3.1.0",
+    "eslint-config-oclif-typescript": "^0.1.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": ["/bin", "/lib"],
+  "homepage": "https://github.com/pitops/react-cli",
+  "keywords": ["oclif"],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "bin": "rcli",
+    "commands": "./lib/commands"
+  },
+  "repository": "pitops/react-cli",
+  "scripts": {
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
