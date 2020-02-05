@@ -1,4 +1,8 @@
 import { Command, flags } from '@oclif/command'
+import { debug as debugInit } from 'debug'
+
+const debug = debugInit('rcli:init')
+// const debug = require('debug')('rcli:init')
 
 class ReactCli extends Command {
   static description = 'describe the command here'
@@ -17,7 +21,7 @@ class ReactCli extends Command {
 
   async run () {
     const { args, flags } = this.parse(ReactCli)
-
+    debug('parsing args', args)
     const name = flags.name || 'world'
     this.log(`hello ${name} from ./src/index.ts`)
     if (args.file && flags.force) {
