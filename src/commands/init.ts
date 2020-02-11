@@ -54,12 +54,11 @@ class ReactCli extends Base {
         )
     }
 
-    this.log(args)
     const outputFolder = flags.name ?? './test'
     const outDir = path.join(process.cwd(), outputFolder)
 
     const spinner = ora('Installing create-react-app').start()
-    // const { stdout } = await execa('npx', ['create-react-app', outputFolder])
+    const { stdout } = await execa('npx', ['create-react-app', outputFolder])
     spinner.succeed()
   }
 }
