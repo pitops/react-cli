@@ -5,9 +5,7 @@ import { debug as debugInit } from 'debug'
 const debug = debugInit('rcli:base')
 const explorer = cosmiconfig('rcli')
 
-type ConfigType = {
-  name?: string
-}
+type ConfigType = {}
 
 export default abstract class Base extends Command {
   static config: ConfigType
