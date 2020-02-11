@@ -6,10 +6,9 @@ import Base from '../base'
 import * as ora from 'ora'
 import * as chalk from 'chalk'
 
-const { prompt } = require('enquirer')
+import { promptFor } from '../utils'
 
 const debug = debugInit('rcli:init')
-// const debug = require('debug')('rcli:init')
 
 class ReactCli extends Base {
   static description = 'describe the command here'
@@ -34,31 +33,26 @@ class ReactCli extends Base {
     debug('parsing flags', flags)
 
     if (!args.outputDir) {
-      args.outputDir = await prompt({
-        type: 'input',
-        name: 'directory',
-        message: 'Please specify output directory',
-        validate: (value: string) => {
-          if (!value) return 'Directory name cannot be empty'
-          return true
-        }
+      args.outputDir = await promptFor({
+        config: {
+          type: 'input',
+          name: 'directory',
+          message: 'Please specify output directory',
+          validate: (value: string) => {
+            if (!value) return 'Directory name cannot be empty'
+            return true
+          }
+        },
+        tip: `You can specify this with ${chalk.red(
+          'rcli init <project-directory>'
+        )} in future`
       })
-        .then((value: any) => value.directory)
-        .catch((error: any) => console.error(error.message))
-        .finally(() =>
-          this.log(
-            `You can specify this with ${chalk.red(
-              'rcli init <project-directory>'
-            )} in future`
-          )
-        )
     }
 
-    const outputFolder = flags.name ?? './test'
-    const outDir = path.join(process.cwd(), outputFolder)
+    const outDir = path.join(process.cwd(), args.outputDir)
 
     const spinner = ora('Installing create-react-app').start()
-    const { stdout } = await execa('npx', ['create-react-app', outputFolder])
+    const { stdout } = await execa('npx', ['create-react-app', outDir])
     spinner.succeed()
   }
 }
