@@ -1,10 +1,12 @@
 import { Command, flags } from '@oclif/command'
 import { debug as debugInit } from 'debug'
-import { prompt } from 'enquirer'
 import * as execa from 'execa'
 import * as path from 'path'
 import Base from '../base'
 import * as ora from 'ora'
+import * as chalk from 'chalk'
+
+const { prompt } = require('enquirer')
 
 const debug = debugInit('rcli:init')
 // const debug = require('debug')('rcli:init')
@@ -22,7 +24,7 @@ class ReactCli extends Base {
     force: flags.boolean({ char: 'f' })
   }
 
-  static args = [{ name: 'file' }]
+  static args = [{ name: 'outputDir' }]
 
   static strict = false
 
@@ -31,28 +33,35 @@ class ReactCli extends Base {
     debug('parsing args', args)
     debug('parsing flags', flags)
 
-    // if (typeof flags.name === 'undefined') {
-    //   if (this.config && this.config.name) {
-    //     flags.name = this.config.name
-    //   } else {
-    //     flags.name = await prompt({
-    //       type: 'input',
-    //       name: 'name',
-    //       message: 'What is your name?'
-    //     })
-    //       .then((value: any) => value.name)
-    //       .catch((error: any) => console.error(error.message))
-    //       .finally(() =>
-    //         console.log('You can specify this with the --name flag in future')
-    //       )
-    //   }
-    // }
+    let outputDir
+    if (!args.outputDir) {
+      args.outputDir = await prompt({
+        type: 'input',
+        name: 'directory',
+        message: 'Please specify output directory',
+        validate: (value: string) => {
+          if (!value) return 'Directory name cannot be empty'
+          return true
+        }
+      })
+        .then((value: any) => value.directory)
+        .catch((error: any) => console.error(error.message))
+        .finally(() =>
+          this.log(
+            `You can specify this with ${chalk.red(
+              'rcli init <project-directory>'
+            )} in future`
+          )
+        )
+    }
+
+    this.log(args)
     const outputFolder = flags.name ?? './test'
     const outDir = path.join(process.cwd(), outputFolder)
 
     const spinner = ora('Installing create-react-app').start()
-    const { stdout } = await execa('npx', ['create-react-app', outputFolder])
-    spinner.succeed('Installed create-react-app')
+    // const { stdout } = await execa('npx', ['create-react-app', outputFolder])
+    spinner.succeed()
   }
 }
 
