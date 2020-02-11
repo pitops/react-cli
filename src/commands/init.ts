@@ -4,6 +4,7 @@ import { prompt } from 'enquirer'
 import * as execa from 'execa'
 import * as path from 'path'
 import Base from '../base'
+import * as ora from 'ora'
 
 const debug = debugInit('rcli:init')
 // const debug = require('debug')('rcli:init')
@@ -49,8 +50,9 @@ class ReactCli extends Base {
     const outputFolder = flags.name ?? './test'
     const outDir = path.join(process.cwd(), outputFolder)
 
+    const spinner = ora('Installing create-react-app').start()
     const { stdout } = await execa('npx', ['create-react-app', outputFolder])
-    this.log(stdout)
+    spinner.succeed('Installed create-react-app')
   }
 }
 
