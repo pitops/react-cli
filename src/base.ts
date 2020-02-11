@@ -11,8 +11,8 @@ export default abstract class Base extends Command {
   static config: ConfigType
 
   async init () {
-    const externalConfig: any = await explorer.search()
-    debug('parsing config', externalConfig.config, externalConfig.filepath)
-    this.config = externalConfig.config
+    const { config, filepath } = (await explorer.search()) || {}
+    debug('parsing config', { config, filepath })
+    this.config = config
   }
 }

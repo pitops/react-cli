@@ -33,7 +33,6 @@ class ReactCli extends Base {
     debug('parsing args', args)
     debug('parsing flags', flags)
 
-    let outputDir
     if (!args.outputDir) {
       args.outputDir = await prompt({
         type: 'input',
