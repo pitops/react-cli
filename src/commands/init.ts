@@ -4,9 +4,8 @@ import * as execa from 'execa'
 import * as path from 'path'
 import Base from '../base'
 import * as ora from 'ora'
-import * as chalk from 'chalk'
 
-import { promptFor } from '../utils'
+import { askFor } from '../prompts'
 
 const debug = debugInit('rcli:init')
 
@@ -33,20 +32,7 @@ class ReactCli extends Base {
     debug('parsing flags', flags)
 
     if (!args.outputDir) {
-      args.outputDir = await promptFor({
-        config: {
-          type: 'input',
-          name: 'directory',
-          message: 'Please specify output directory',
-          validate: (value: string) => {
-            if (!value) return 'Directory name cannot be empty'
-            return true
-          }
-        },
-        tip: `You can specify this with ${chalk.red(
-          'rcli init <project-directory>'
-        )} in future`
-      })
+      args.outputDir = await askFor('directory')
     }
 
     const outDir = path.join(process.cwd(), args.outputDir)

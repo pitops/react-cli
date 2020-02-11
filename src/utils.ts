@@ -1,11 +1,7 @@
 import { prompt } from 'enquirer'
+import { IPromptConfig } from './prompts'
 
-interface IPromptFor {
-  config: any
-  tip?: string
-}
-
-export const promptFor = async ({ config, tip }: IPromptFor) => {
+export const promptWrapper = async ({ config, tip }: IPromptConfig) => {
   return await prompt(config)
     .then((value: any) => value[config.name])
     .catch((error: any) => console.error(error.message))
