@@ -1,25 +1,22 @@
-import { Command, flags } from '@oclif/command'
+import { flags } from '@oclif/command'
 import { debug as debugInit } from 'debug'
+const yarnOrNpm = require('yarn-or-npm')
 import * as execa from 'execa'
 import * as path from 'path'
-import Base from '../base'
 import * as ora from 'ora'
 
-import { askFor } from '../prompts'
+import Base from '../shared/base'
+import { askFor } from '../shared/prompts'
 
 const debug = debugInit('rcli:init')
 
 class ReactCli extends Base {
-  static description = 'describe the command here'
+  static description = 'Start scaffolding'
 
   static flags = {
-    // add --version flag to show CLI version
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({ char: 'n', description: 'name to print' }),
-    // flag with no value (-f, --force)
-    force: flags.boolean({ char: 'f' })
+    outputDir: flags.string({ char: 'o' })
   }
 
   static args = [{ name: 'outputDir' }]
@@ -31,14 +28,26 @@ class ReactCli extends Base {
     debug('parsing args', args)
     debug('parsing flags', flags)
 
-    if (!args.outputDir) {
-      args.outputDir = await askFor('directory')
+    if (!args.outputDir && !flags.outputDir) {
+      args.outputDir = await askFor('outputDir')
     }
 
-    const outDir = path.join(process.cwd(), args.outputDir)
+    const packageManager = yarnOrNpm.hasYarn() ? 'yarn' : 'npm'
+    const installCommand = packageManager === 'yarn' ? 'add' : 'install'
+
+    const outDir = path.join(process.cwd(), args.outputDir || flags.outputDir)
 
     const spinner = ora('Installing create-react-app').start()
-    const { stdout } = await execa('npx', ['create-react-app', outDir])
+    // await execa('npx', ['create-react-app', outDir])
+    spinner.succeed()
+
+    spinner.start('Installing dependencies')
+    process.chdir(outDir)
+    const { stdout } = await execa(packageManager, [
+      installCommand,
+      ...this.dependenciesList.antd
+    ])
+    console.log(stdout)
     spinner.succeed()
   }
 }

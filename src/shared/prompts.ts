@@ -7,19 +7,19 @@ export interface IPromptConfig {
 }
 
 const prompts: { [key: string]: IPromptConfig } = {
-  directory: {
+  outputDir: {
     config: {
       type: 'input',
       name: 'directory',
       message: 'Please specify output directory',
       validate: (value: string) => {
-        if (!value) return 'Directory name cannot be empty'
+        if (!value) return 'Output directory name cannot be empty'
         return true
       }
     },
-    tip: `You can specify this with ${chalk.red(
+    tip: `Tip: You can specify this with ${chalk.red(
       'rcli init <project-directory>'
-    )} in future`
+    )} in the future`
   }
 }
 
